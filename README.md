@@ -19,11 +19,13 @@ I'm going to port whole DjVu Imager tool to Qt to make it native for Linux.
 2. Install the dependancies: `sudo apt-get install libfreeimage-dev`
 3. Get the latest DjVuLibre sources and unpack them to the root folder of the project.
 4. If the subfolder with DjVuLibre has name other then `djvulibre-3.5.27` - open CMakeFIles.txt and correct the path for `djvu_libre_sources_path` variable in it.
-5. ```mkdir build
+5. ```
+      mkdir build
       cd build
-      cmake ...
-      make```
-5. To test - run `./fi_c44 ` from the `build` subfolder
+      cmake ..
+      make
+   ```
+6. To test - run `./fi_c44 ` from the `build` subfolder
 
 
 
