@@ -12,7 +12,7 @@ I've decided to adapt it a little to make more crossplatform:
 * The original `c44.cpp` file was updated with an up-to-date copy to be able to compile with latest DjVuLibre.
 
 Now encoder could be build for Linux.
-I'm going to port whole DjVu Imager tool to Qt to make it native for Linux.
+I've also ported [DjVu Imager](https://github.com/trufanov-nok/DjVu_Imager-Qt) tool to Qt to build it natively for Linux. `DjVu Imager` is using `fi_c44`.
 
 # Compilation (Linux)
 1. Clone the project.
