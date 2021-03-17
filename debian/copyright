@@ -1,0 +1,7 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: https://github.com/trufanov-nok/c44-freeimage
+
+Files: *
+Copyright: 2002  Leon Bottou and Yann Le Cun.
+           2001  AT&T
+License: GPL-2+
