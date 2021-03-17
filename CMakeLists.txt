@@ -109,27 +109,27 @@ SET(
 
 SET(
         sources
-        src/fi_c44.cpp
+        src/c44-fi.cpp
 )
 
 
 IF (WIN32)
-        ADD_EXECUTABLE( fi_c44 WIN32 ${sources} ${djvu_libre_sources})
+        ADD_EXECUTABLE( c44-fi WIN32 ${sources} ${djvu_libre_sources})
 	add_compile_definitions(_WIN32)
 ELSEIF(APPLE)
-        ADD_EXECUTABLE( fi_c44 MACOSX_BUNDLE ${sources} ${djvu_libre_sources})
+        ADD_EXECUTABLE( c44-fi MACOSX_BUNDLE ${sources} ${djvu_libre_sources})
 	add_compile_definitions(macintosh)
 ELSE()
-        ADD_EXECUTABLE( fi_c44 ${sources} ${djvu_libre_sources})
+        ADD_EXECUTABLE( c44-fi ${sources} ${djvu_libre_sources})
 	add_compile_definitions(UNIX)
 ENDIF()
 
 TARGET_LINK_LIBRARIES(
-        fi_c44 ${FI_LIBRARY} ${LIBRE_LIBRARY}
+        c44-fi ${FI_LIBRARY} ${LIBRE_LIBRARY}
 )
 
 IF(APPLE)
-        INSTALL(TARGETS fi_c44 BUNDLE DESTINATION . RUNTIME DESTINATION bin)
+        INSTALL(TARGETS c44-fi BUNDLE DESTINATION . RUNTIME DESTINATION bin)
 ELSE(APPLE)
-        INSTALL(TARGETS fi_c44 RUNTIME DESTINATION bin)
+        INSTALL(TARGETS c44-fi RUNTIME DESTINATION bin)
 ENDIF(APPLE)

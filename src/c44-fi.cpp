@@ -280,7 +280,7 @@ usage()
          "C44 --- DjVuLibre-" DJVULIBRE_VERSION "\n"
 #endif
          "Image compression utility using IW44 wavelets\n\n"
-         "Usage: fi_c44 [options] graphical-file [djvufile]\n"
+         "Usage: c44-fi [options] graphical-file [djvufile]\n"
          "Options:\n"
          "    -slice n+...+n   -- select an increasing sequence of data slices\n"
          "                        expressed as integers ranging from 1 to 140.\n"
@@ -617,13 +617,13 @@ parse(GArray<GUTF8String> &argv)
           else if (argv[i] == "-bsf")
             {
               if (++i >= argc)
-                  G_THROW( ERR_MSG("fi_c44.no_bsf_arg") );
+                  G_THROW( ERR_MSG("c44-fi.no_bsf_arg") );
               if (flag_bsf > 1)
-                  G_THROW( ERR_MSG("fi_c44.duplicate_bsf") );
+                  G_THROW( ERR_MSG("c44-fi.duplicate_bsf") );
               char *ptr;
               flag_bsf = strtol(argv[i], &ptr, 10);
               if (*ptr || flag_bsf<2 || flag_bsf>12)
-                  G_THROW( ERR_MSG("fi_c44.illegal_bsf") );
+                  G_THROW( ERR_MSG("c44-fi.illegal_bsf") );
             }
           else
             usage();
