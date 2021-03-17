@@ -246,6 +246,7 @@ int argc_decibel = 0;
 IW44Image::CRCBMode arg_crcbmode = IW44Image::CRCBnormal;
 
 int flag_bsf = 1;
+FREE_IMAGE_FILTER flag_scale_filter = FILTER_BICUBIC;
 
 #define MAXCHUNKS 64
 float argv_bpp[MAXCHUNKS];
@@ -305,6 +306,15 @@ usage()
          "    -crcbdelay n     -- select chrominance coding delay (default 10)\n"
          "                        for -crcbnormal and -crcbhalf modes\n"
          "    -bsf n           -- select an int background subsampling factor (2..12)\n"
+         "    -bsm method      -- subsampling method to use if -bsf specified. May be: \n"
+         ""
+         "         bicubic     -- (By default) Mitchell & Netravali's two-param cubic filter\n"
+         "         box         -- Box, pulse, Fourier window, 1st order (constant) b-spline\n"
+         "         bilinear    -- Bilinear filter\n"
+         "         bspline     -- 4th order (cubic) b-spline\n"
+         "         catmullrom  -- Catmull-Rom spline, Overhauser spline\n"
+         "         lanczos3    -- Lanczos3 filter\n"
+         ""
          "\n");
   exit(1);
 }
@@ -625,6 +635,26 @@ parse(GArray<GUTF8String> &argv)
               if (*ptr || flag_bsf<2 || flag_bsf>12)
                   G_THROW( ERR_MSG("c44-fi.illegal_bsf") );
             }
+          else if (argv[i] == "-bsm")
+            {
+              if (++i >= argc)
+                  G_THROW( ERR_MSG("c44-fi.no_bsm_arg") );
+              if (argv[i] == "box") {
+                  flag_scale_filter = FILTER_BOX;
+              } else if (argv[i] == "bicubic") {
+                  flag_scale_filter = FILTER_BICUBIC;
+              } else if (argv[i] == "bilinear") {
+                  flag_scale_filter = FILTER_BILINEAR;
+              } else if (argv[i] == "bspline") {
+                  flag_scale_filter = FILTER_BSPLINE;
+              } else if (argv[i] == "catmullrom") {
+                  flag_scale_filter = FILTER_CATMULLROM;
+              } else if (argv[i] == "lanczos3") {
+                  flag_scale_filter = FILTER_LANCZOS3;
+              } else {
+                  G_THROW( ERR_MSG("c44-fi.illegal_bsm") );
+              }
+            }
           else
             usage();
         }
@@ -785,7 +815,7 @@ main(int argc, char **argv)
             unsigned height = FreeImage_GetHeight(dib_tmp);
 
             dib = FreeImage_Rescale(dib_tmp, (int)((width+(flag_bsf-1))/flag_bsf),
-                                    (int)((height+(flag_bsf-1))/flag_bsf), FILTER_BICUBIC);
+                                    (int)((height+(flag_bsf-1))/flag_bsf), flag_scale_filter);
 
             FreeImage_Unload(dib_tmp);
         } else
