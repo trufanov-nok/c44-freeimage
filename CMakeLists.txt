@@ -17,7 +17,7 @@ SET(
 PROJECT("FreeImage version of c44 encoder")
 
 # should point to DjVuLibre sources
-SET(djvu_libre_sources_path "./djvulibre-3.5.27/")
+SET(djvu_libre_sources_path "./djvulibre/")
 SET(libdjvu "${djvu_libre_sources_path}libdjvu/" )
 
 # For config.h
@@ -81,7 +81,7 @@ INCLUDE_DIRECTORIES("${FI_INCLUDE_DIR}"
 )
 
 FIND_LIBRARY(
-        FI_LIBRARY libfreeimage
+        FI_LIBRARY freeimage
 	PATHS /usr/local/lib /usr/lib
 	DOC "Path to libfreeimage library."
 )
