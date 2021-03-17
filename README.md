@@ -15,14 +15,13 @@ Now encoder could be build for Linux.
 I've also ported [DjVu Imager](https://github.com/trufanov-nok/DjVu_Imager-Qt) tool to Qt to build it natively for Linux. `DjVu Imager` is using `fi_c44`.
 
 # Compilation (Linux)
-1. Clone the project.
+1. Clone the project with djvulibre as a submodule (note `--recursive` parameter):  
+`git clone --recursive https://github.com/trufanov-nok/fi_c44-multiplatform.git`
 2. Install the dependencies: `sudo apt-get install libfreeimage-dev`
-3. Get the latest DjVuLibre sources and unpack them to the root folder of the project.
-4. If the subfolder with DjVuLibre has name other then `djvulibre-3.5.27` - open CMakeFIles.txt and correct the path for `djvu_libre_sources_path` variable in it.
-5. ```
+3. ```
       mkdir build
       cd build
       cmake ..
       make
    ```
-6. To test - run `./fi_c44 ` from the `build` subfolder
+4. To test - run `./fi_c44 ` from the `build` subfolder
