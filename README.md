@@ -18,12 +18,16 @@ I've also ported [DjVu Imager](https://github.com/trufanov-nok/DjVu_Imager-Qt) t
 
 # Build
 1. Clone the project with djvulibre as a submodule (note `--recursive` parameter):  
-`git clone --recursive https://github.com/trufanov-nok/c44-freeimage.git`
+```
+      git clone --recursive https://github.com/trufanov-nok/c44-freeimage.git
+      cd c44-freeimage
+```
 2. Install the dependencies: `sudo apt-get install libfreeimage-dev`
-3. ```
+3. Build the project:
+```
       mkdir build
       cd build
       cmake ..
       make
-   ```
+```
 4. To test - run `./c44-fi ` from the `build` subfolder
