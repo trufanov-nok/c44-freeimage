@@ -246,6 +246,9 @@ int argc_decibel = 0;
 IW44Image::CRCBMode arg_crcbmode = IW44Image::CRCBnormal;
 
 int flag_bsf = 1;
+int flag_keep_size = 0;
+unsigned original_width = 0;
+unsigned original_height = 0;
 FREE_IMAGE_FILTER flag_scale_filter = FILTER_BICUBIC;
 
 #define MAXCHUNKS 64
@@ -314,6 +317,8 @@ usage()
          "         bspline     -- 4th order (cubic) b-spline\n"
          "         catmullrom  -- Catmull-Rom spline, Overhauser spline\n"
          "         lanczos3    -- Lanczos3 filter\n"
+         "    -keep_size       -- (on by default) keep size of djvu document equal to\n"
+         "                        graphical file even background subsampling factor is used\n"
          ""
          "\n");
   exit(1);
@@ -635,6 +640,12 @@ parse(GArray<GUTF8String> &argv)
               if (*ptr || flag_bsf<2 || flag_bsf>12)
                   G_THROW( ERR_MSG("c44-fi.illegal_bsf") );
             }
+          else if (argv[i] == "-keep_size")
+            {
+              if (flag_keep_size != 0)
+                  G_THROW( ERR_MSG("c44-fi.duplicate_keep_size") );
+              flag_keep_size = 1;
+            }
           else if (argv[i] == "-bsm")
             {
               if (++i >= argc)
@@ -704,8 +715,13 @@ create_photo_djvu_file(IW44Image &iw, int w, int h,
   // Prepare info chunk
   GP<DjVuInfo> ginfo=DjVuInfo::create();
   DjVuInfo &info=*ginfo;
-  info.width = w;
-  info.height = h;
+  if (flag_keep_size && original_width && original_height) {
+     info.width = original_width;
+     info.height = original_height;
+  } else {
+     info.width = w;
+     info.height = h;
+  }
   info.dpi = (flag_dpi>0 ? flag_dpi : 100);
   info.gamma = (flag_gamma>0 ? flag_gamma : 2.2);
   // Write djvu header and info chunk
@@ -813,6 +829,10 @@ main(int argc, char **argv)
             FIBITMAP *dib_tmp = GenericLoader(filename.getbuf(), 0);
             unsigned width  = FreeImage_GetWidth(dib_tmp);
             unsigned height = FreeImage_GetHeight(dib_tmp);
+            if (flag_keep_size) {
+                original_width = width;
+                original_height = height;
+            }
 
             dib = FreeImage_Rescale(dib_tmp, (int)((width+(flag_bsf-1))/flag_bsf),
                                     (int)((height+(flag_bsf-1))/flag_bsf), flag_scale_filter);
