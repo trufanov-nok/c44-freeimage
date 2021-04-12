@@ -247,6 +247,7 @@ IW44Image::CRCBMode arg_crcbmode = IW44Image::CRCBnormal;
 
 int flag_bsf = 1;
 int flag_keep_size = 0;
+int flag_save_as_iff = 0;
 unsigned original_width = 0;
 unsigned original_height = 0;
 FREE_IMAGE_FILTER flag_scale_filter = FILTER_BICUBIC;
@@ -319,6 +320,8 @@ usage()
          "         lanczos3    -- Lanczos3 filter\n"
          "    -keep_size       -- (on by default) keep size of djvu document equal to\n"
          "                        graphical file even background subsampling factor is used\n"
+         "    -iff             -- save result in IFF container instead of DjVu document\n"
+         "                        (may be used as argument for BG44= parameter in djvumake).\n"
          ""
          "\n");
   exit(1);
@@ -666,6 +669,12 @@ parse(GArray<GUTF8String> &argv)
                   G_THROW( ERR_MSG("c44-fi.illegal_bsm") );
               }
             }
+          else if (argv[i] == "-iff")
+            {
+               if (flag_save_as_iff != 0)
+                  G_THROW( ERR_MSG("c44-fi.duplicate_iff") );
+               flag_save_as_iff = 1;
+            }
           else
             usage();
         }
@@ -685,7 +694,12 @@ parse(GArray<GUTF8String> &argv)
       int dot = base.rsearch('.');
       if (dot >= 1)
         base = base.substr(0,dot);
-      const char *ext=".djvu";
+      const char *ext;
+      if (!flag_save_as_iff) {
+          ext =".djvu";
+      } else {
+          ext =".iff";
+      }
       g().iw4url = GURL::UTF8(base+ext,codebase);
     }
 }
@@ -923,8 +937,13 @@ main(int argc, char **argv)
             if (flag_dbfrac > 0)
                 iw->parm_dbfrac((float)flag_dbfrac);
             int nchunk = resolve_quality(w*h);
-            // Create djvu file
-            create_photo_djvu_file(*iw, w, h, *iff, nchunk, g().parms);
+            
+            if (!flag_save_as_iff) {
+                // Create djvu file
+                create_photo_djvu_file(*iw, w, h, *iff, nchunk, g().parms);
+            } else {
+                iw->encode_iff(*iff, nchunk, g().parms);
+            }
         }
 
         FreeImage_Unload(dib);
