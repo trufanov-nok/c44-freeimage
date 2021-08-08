@@ -861,10 +861,11 @@ main(int argc, char **argv)
             return -2;
         }
 
-        if (!(FreeImage_GetBPP(dib) == 24) &&
-                !((FreeImage_GetBPP(dib) == 8) && (FreeImage_GetColorType(dib) != FIC_PALETTE))) {
+        if ( !(FreeImage_GetBPP(dib) == 24) &&
+             !((FreeImage_GetBPP(dib) == 32) && (FreeImage_GetColorType(dib) != FIC_RGBALPHA)) &&
+             !((FreeImage_GetBPP(dib) == 8) && (FreeImage_GetColorType(dib) != FIC_PALETTE)) ) {
 
-            printf("Only 24-bit color or 8-bit greyscale images are supported.\n");
+            printf("Only 32-bit (RGBA), 24-bit color or 8-bit greyscale images are supported.\n In case of 32-bit the alpha channel is ignored.\n");
             FreeImage_Unload(dib);
             return -3;
         }
@@ -882,6 +883,9 @@ main(int argc, char **argv)
         BYTE* lines;
 
         unsigned bpp = FreeImage_GetBPP(dib); // bitdepth, 24 - for color, 8 - for greyscale
+        if ( bpp == 32 ) {
+            printf("Warning: 32-bit image, the alpha channel will be ignored.\n");
+        }
         unsigned btpp = bpp/8;
 
         GP<IW44Image> iw;
@@ -896,8 +900,8 @@ main(int argc, char **argv)
             lines = bits + j * pitch;
             for (i=0; i<w; i++) {
                 GPixel p;
-                if (btpp == 3) {
-                    // color 24 bit
+                if (btpp == 3 || btpp == 4) {
+                    // color 24 bit or 32 bit and alpha channel is ignored
                     p.r = lines[FI_RGBA_RED]; // red byte
                     p.g = lines[FI_RGBA_GREEN]; // green byte
                     p.b = lines[FI_RGBA_BLUE]; // blue byte
@@ -916,6 +920,10 @@ main(int argc, char **argv)
 
         GPixmap &ipm = *gipm;
 
+        if (btpp == 4) {
+            // we ignored alpha channel
+            btpp = 3;
+        }
         int bm_size = w*h*btpp;
 
         // Change percent specification into size specification
