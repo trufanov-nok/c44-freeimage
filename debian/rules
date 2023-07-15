@@ -1,9 +1,0 @@
-#!/usr/bin/make -f
-
-export DH_VERBOSE=1
-
-%:
-	dh $@
-
-#override_dh_auto_configure:
-#	git config --system http.sslVerify false && git clone https://github.com/barak/djvulibre.git && dh_auto_configure

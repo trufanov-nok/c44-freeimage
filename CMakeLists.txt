@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9...3.13)
 
 IF(POLICY CMP0003)
 	# Allow linking with full library path instead of -L/path -llibrary
@@ -14,7 +14,9 @@ SET(
 )
 
 
-PROJECT("FreeImage version of c44 encoder")
+PROJECT("c44-freeimage")
+SET(CMAKE_PROJECT_VERSION "3.5.28")
+SET(CMAKE_HOMEPAGE_URL "https://github.com/trufanov-nok/c44-freeimage")
 
 SET(CMAKE_BUILD_TYPE "Release") # builddeb won't compile with "None"
 
@@ -135,3 +137,5 @@ IF(APPLE)
 ELSE(APPLE)
         INSTALL(TARGETS c44-fi RUNTIME DESTINATION bin)
 ENDIF(APPLE)
+
+ADD_SUBDIRECTORY(packaging)
